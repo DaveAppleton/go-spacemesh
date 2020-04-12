@@ -119,7 +119,11 @@ peerLoop:
 			// TODO: replace peer ?
 			err := prot.net.SendMessage(pubkey, nextProt, payload)
 			if err != nil {
-				prot.With().Warning("Failed sending", log.String("protocol", nextProt), h.Field("hash"), log.String("to", pubkey.String()), log.Err(err))
+				prot.With().Warning("Failed sending",
+					log.String("protocol", nextProt),
+					h.Field("hash"),
+					log.String("to", pubkey.String()),
+					log.Err(err))
 			}
 			wg.Done()
 		}(p)
@@ -164,11 +168,17 @@ func (prot *Protocol) processMessage(sender p2pcrypto.PublicKey, protocol string
 		// todo : - have some more metrics for termination
 		// todo	: - maybe tell the peer we got this message already?
 		// todo : - maybe block this peer since he sends us old messages
-		prot.Log.With().Debug("old_gossip_message", log.String("from", sender.String()), log.String("protocol", protocol), log.String("hash", util.Bytes2Hex(h[:])))
+		prot.Log.With().Debug("old_gossip_message",
+			log.String("from", sender.String()),
+			log.String("protocol", protocol),
+			log.String("hash", util.Bytes2Hex(h[:])))
 		return nil
 	}
 
-	prot.Log.Event().Debug("new_gossip_message", log.String("from", sender.String()), log.String("protocol", protocol), log.String("hash", util.Bytes2Hex(h[:])))
+	prot.Log.Event().Debug("new_gossip_message",
+		log.String("from", sender.String()),
+		log.String("protocol", protocol),
+		log.String("hash", util.Bytes2Hex(h[:])))
 	metrics.NewGossipMessages.With("protocol", protocol).Add(1)
 	return prot.net.ProcessGossipProtocolMessage(sender, protocol, msg, prot.propagateQ)
 }
@@ -186,7 +196,10 @@ func (prot *Protocol) handlePQ() {
 			continue
 		}
 		h := types.CalcMessageHash12(m.Message(), m.Protocol())
-		prot.Log.With().Debug("new_gossip_message_relay", log.String("protocol", m.Protocol()), log.String("hash", util.Bytes2Hex(h[:])))
+		prot.Log.With().Debug("new_gossip_message_relay",
+			log.String("from", m.Sender().String()),
+			log.String("protocol", m.Protocol()),
+			log.String("hash", util.Bytes2Hex(h[:])))
 		prot.propagateMessage(m.Message(), h, m.Protocol(), m.Sender())
 	}
 }
@@ -194,7 +207,8 @@ func (prot *Protocol) handlePQ() {
 func (prot *Protocol) getPriority(protoName string) priorityq.Priority {
 	v, exist := prot.priorities[protoName]
 	if !exist {
-		prot.With().Warning("note: no priority found for protocol", log.String("protoName", protoName))
+		prot.With().Warning("note: no priority found for protocol",
+			log.String("protoName", protoName))
 		return priorityq.Low
 	}
 
@@ -209,7 +223,9 @@ func (prot *Protocol) propagationEventLoop() {
 		select {
 		case msgV := <-prot.propagateQ:
 			if err := prot.pq.Write(prot.getPriority(msgV.Protocol()), msgV); err != nil {
-				prot.With().Error("fatal: could not write to priority queue", log.Err(err), log.String("protocol", msgV.Protocol()))
+				prot.With().Error("fatal: could not write to priority queue",
+					log.Err(err),
+					log.String("protocol", msgV.Protocol()))
 			}
 			metrics.PropagationQueueLen.Set(float64(len(prot.propagateQ)))
 
