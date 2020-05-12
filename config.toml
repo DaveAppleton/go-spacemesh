@@ -1,6 +1,6 @@
 # sample spacemesh config file
 # use the config flag to start a node with a config file.
-# e.g $./go-spacemash --config ./config.toml
+# e.g $./go-spacemesh --config ./config.toml
 # cli flags will get a higher priority than configured in the file.
 
 # Main Config
