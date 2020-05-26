@@ -231,5 +231,34 @@ service SpacemeshService {
           body: "*"
         };
     }
+
+    rpc GetLayer (LayerRequest) returns (LayerResponse) {
+        option (google.api.http) = {
+          post: "/v1/getlayer"
+          body: "*"
+        };
+
+    }
 }
 
+message LayerRequest {
+    uint64 layer = 1;
+}
+
+message LayerResponse {
+    repeated Block blocks = 1;
+    uint64   index = 2;
+}
+
+message Block {
+    uint64 layerID = 1;
+    int64  timestamp = 2;
+    string atxID = 3;
+    string  data = 4;
+    repeated string txIDs = 5;
+    repeated string atxIDs = 6;
+}
+
+message Atx {
+    bytes atxID = 1;
+}

@@ -4,6 +4,10 @@ package api
 import (
 	"encoding/hex"
 	"fmt"
+	"net"
+	"strconv"
+	"time"
+
 	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/spacemeshos/go-spacemesh/activation"
 	"github.com/spacemeshos/go-spacemesh/api/pb"
@@ -11,12 +15,10 @@ import (
 	"github.com/spacemeshos/go-spacemesh/common/util"
 	"github.com/spacemeshos/go-spacemesh/config"
 	"github.com/spacemeshos/go-spacemesh/log"
+	"github.com/spacemeshos/go-spacemesh/mesh"
 	"github.com/spacemeshos/go-spacemesh/miner"
 	"github.com/spacemeshos/go-spacemesh/p2p"
 	"google.golang.org/grpc/keepalive"
-	"net"
-	"strconv"
-	"time"
 
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
@@ -34,7 +36,7 @@ type SpacemeshGrpcService struct {
 	Port          uint
 	StateAPI      StateAPI         // State DB
 	Network       NetworkAPI       // P2P Swarm
-	Tx            TxAPI            // Mesh
+	Tx            *mesh.Mesh       // Mesh
 	TxMempool     *miner.TxMempool // TX Mempool
 	Mining        MiningAPI        // ATX Builder
 	Oracle        OracleAPI
@@ -250,7 +252,7 @@ type TxAPI interface {
 }
 
 // NewGrpcService create a new grpc service using config data.
-func NewGrpcService(port int, net NetworkAPI, state StateAPI, tx TxAPI, txMempool *miner.TxMempool, mining MiningAPI, oracle OracleAPI, genTime GenesisTimeAPI, post PostAPI, layerDurationSec int, syncer Syncer, cfg *config.Config, logging LoggingAPI) *SpacemeshGrpcService {
+func NewGrpcService(port int, net NetworkAPI, state StateAPI, tx *mesh.Mesh, txMempool *miner.TxMempool, mining MiningAPI, oracle OracleAPI, genTime GenesisTimeAPI, post PostAPI, layerDurationSec int, syncer Syncer, cfg *config.Config, logging LoggingAPI) *SpacemeshGrpcService {
 	options := []grpc.ServerOption{
 		// XXX: this is done to prevent routers from cleaning up our connections (e.g aws load balances..)
 		// TODO: these parameters work for now but we might need to revisit or add them as configuration
