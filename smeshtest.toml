@@ -1,0 +1,42 @@
+[main]
+genesis-time = "2020-04-23T16:08:08+00:00"
+layer-duration-sec = "300"
+layer-average-size = "50"
+layers-per-epoch = "288"
+poet-server = "af1cbcd27574011eaad71167fe06fe2e-425091448.us-east-1.elb.amazonaws.com"
+genesis-active-size = "100"
+sync-request-timeout = "60000"
+hdist = "10"
+atxs-per-block = "25"
+
+[p2p]
+network-id = "114"
+max-inbound = "32"
+
+[p2p.swarm]
+bootstrap = true
+randcon = "8"
+bootnodes = ["spacemesh://6AZSsUh67W41hndtRDSknWMQQu7UiZRVLvaZw31VpgEa@3.88.87.83:65208","spacemesh://6AZSsUh67W41hndtRDSknWMQQu7UiZRVLvaZw31VpgEa@3.88.87.83:65208","spacemesh://H4z6oqGe3dYH3oVuf8ubWLNdQsvAUNSrSoRfkVxGr3Qf@3.88.87.83:62840","spacemesh://Eqj9yHFn58JfMQtterX8y7HqNjdRz7XPnPZX5G6W57Ff@3.227.219.29:63400","spacemesh://9LqGHccSo2KZPbyfdbr4fPwR8Z2WqS1RgsGYVWbqUZ4i@3.88.87.83:63705","spacemesh://DMHRERwRmezsdrFnbqzdiojezC444oCDCx6kK66NCjYA@3.227.219.29:64484"]
+
+[api]
+
+[time]
+
+[post]
+post-space = "4294967296"
+post-labels = "50"
+
+[reward]
+base-reward = {abs = "50000000000000"}
+
+[hare]
+hare-committee-size = "50"
+hare-max-adversaries = "24"
+hare-round-duration-sec = "30"
+hare-limit-iterations = "10"
+hare-exp-leaders = "5"
+hare-wakeup-delta = "30"
+
+[hare-eligibility]
+eligibility-confidence-param = "100"
+eligibility-epoch-offset = "0"
