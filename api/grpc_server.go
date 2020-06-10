@@ -420,11 +420,13 @@ func (s SpacemeshGrpcService) GetAccountTxs(ctx context.Context, txsSinceLayer *
 
 	meshTxIds := s.getTxIdsFromMesh(minLayer, addr)
 	for _, txID := range meshTxIds {
+
 		txs.Txs = append(txs.Txs, txID.String())
 	}
 
 	mempoolTxIds := s.TxMempool.GetTxIdsByAddress(addr)
 	for _, txID := range mempoolTxIds {
+
 		txs.Txs = append(txs.Txs, txID.String())
 	}
 
